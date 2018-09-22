@@ -5,6 +5,7 @@ import com.badlogic.gdx.Screen;
 import com.badlogic.gdx.graphics.GL20;
 import com.badlogic.gdx.graphics.OrthographicCamera;
 import com.badlogic.gdx.graphics.Texture;
+import com.badlogic.gdx.graphics.g2d.GlyphLayout;
 import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
@@ -16,6 +17,7 @@ public class GameOverScreen implements Screen {
     private Rectangle button;
     private boolean newHighScore;
     private Texture backgroundImage;
+    private GlyphLayout layout;
 
     public GameOverScreen(final SpaceShooter game) {
         this.game = game;
@@ -24,6 +26,8 @@ public class GameOverScreen implements Screen {
 
         playAgainImage = new Texture(Gdx.files.internal("playAgainButton.png"));
         backgroundImage = new Texture(Gdx.files.internal("background.png"));
+        layout = new GlyphLayout();
+
         button = new Rectangle();
         button.x = 235;
         button.y = 300;
@@ -41,17 +45,24 @@ public class GameOverScreen implements Screen {
         Gdx.gl.glClearColor(0, 0, 0.1f, 1);
         Gdx.gl.glClear(GL20.GL_COLOR_BUFFER_BIT);
 
+        // Draw images and display score and high score
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
         game.batch.begin();
         game.batch.draw(backgroundImage, 0, 0);
-        game.largeFont.draw(game.batch, "Game Over! Score is " + game.getPoints(), 200, 200);
-        if (newHighScore)
-            game.font.draw(game.batch, "New High Score!", 400, 150);
-        game.largeFont.draw(game.batch, "High Score is " + game.getHighScore(), 200, 150);
+
+        layout.setText(game.largeFont, "Game Over! Score is " + game.getPoints());
+        game.largeFont.draw(game.batch, layout, 400 - layout.width/2, 200);
+        if (newHighScore) {
+            layout.setText(game.largeFont, "New High Score!");
+            game.largeFont.draw(game.batch, layout, 400 - layout.width/2, 250);
+        }
+        layout.setText(game.largeFont, "High Score is " + game.getHighScore());
+        game.largeFont.draw(game.batch, layout, 400 - layout.width/2, 150);
         game.batch.draw(playAgainImage, button.x, button.y);
         game.batch.end();
 
+        // Handle user input
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
