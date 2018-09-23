@@ -9,7 +9,6 @@ import com.badlogic.gdx.math.Rectangle;
 import com.badlogic.gdx.math.Vector3;
 
 public class MenuScreen implements Screen {
-
     private final SpaceShooter game;
     private Rectangle startButton;
     private Rectangle quitButton;
@@ -24,17 +23,20 @@ public class MenuScreen implements Screen {
         camera = new OrthographicCamera();
         camera.setToOrtho(false, game.screenWidth, game.screenHeight);
 
+        // Load textures
         titleImage = new Texture(Gdx.files.internal("title.png"));
         startImage = new Texture(Gdx.files.internal("startButton.png"));
         quitImage = new Texture(Gdx.files.internal("quitButton.png"));
         backgroundImage = new Texture(Gdx.files.internal("background.png"));
 
+        // Create start button
         startButton = new Rectangle();
         startButton.x = 289;
         startButton.y = 200;
         startButton.width = 222;
         startButton.height = 39;
 
+        // Create quit button
         quitButton = new Rectangle();
         quitButton.x = 289;
         quitButton.y = 130;
@@ -50,6 +52,7 @@ public class MenuScreen implements Screen {
         camera.update();
         game.batch.setProjectionMatrix(camera.combined);
 
+        // Draw images and buttons
         game.batch.begin();
         game.batch.draw(backgroundImage, 0, 0);
         game.batch.draw(titleImage, 185, 290);
@@ -57,6 +60,7 @@ public class MenuScreen implements Screen {
         game.batch.draw(quitImage, quitButton.x, quitButton.y);
         game.batch.end();
 
+        // Handle user input
         if (Gdx.input.isTouched()) {
             Vector3 touchPos = new Vector3();
             touchPos.set(Gdx.input.getX(), Gdx.input.getY(), 0);
